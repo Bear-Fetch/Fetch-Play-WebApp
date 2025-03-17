@@ -60,10 +60,7 @@
 <body>
 
     <!-- Fetch Playtime iframe -->
-    <iframe id="fetchFrame" 
-        src="https://fetch.playtimeweb.com/play?user_id=65dce483fe555d15f28a73aa&idfa=&placement=landing_games_button_games_adjoe" 
-        allowfullscreen>
-    </iframe>
+    <iframe id="fetchFrame" allowfullscreen></iframe>
 
     <!-- Home Screen Prompt -->
     <div id="addToHomeScreenPrompt">
@@ -73,6 +70,21 @@
     </div>
 
     <script>
+        // Function to generate a random user_id similar to the given example
+        function generateUserId() {
+            const chars = 'abcdef0123456789';
+            let userId = '';
+            for (let i = 0; i < 24; i++) {  // Match the length of your example (24 characters)
+                userId += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return userId;
+        }
+
+        // Set iframe src with random user_id
+        const userId = generateUserId();
+        document.getElementById('fetchFrame').src = `https://fetch.playtimeweb.com/play?user_id=${userId}&idfa=&placement=landing_games_button_games_adjoe`;
+
+        // Prompt to add to Home Screen
         document.addEventListener('DOMContentLoaded', function () {
             // Check if running in standalone mode
             if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
