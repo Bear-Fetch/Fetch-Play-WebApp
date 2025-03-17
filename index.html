@@ -3,10 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Enable Standalone Web App Mode -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Fetch Play">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <title>Fetch Play Wrapper</title>
+
+    <!-- Home Screen Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="icon-120.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="icon-76.png">
+
     <style>
         body {
             margin: 0;
@@ -23,9 +33,75 @@
             height: 100vh;
             border: none;
         }
+
+        /* Home Screen Prompt Styles */
+        #addToHomeScreenPrompt {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            display: none;
+        }
+        #addToHomeScreenPrompt button {
+            margin-top: 5px;
+            padding: 5px 10px;
+            background: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <iframe id="fetchFrame" src="https://fetch.playtimeweb.com/play?user_id=65dce483fe555d15f28a73aa&idfa=&placement=landing_games_button_games_adjoe" allowfullscreen></iframe>
+
+    <!-- Fetch Playtime iframe -->
+    <iframe id="fetchFrame" 
+        src="https://fetch.playtimeweb.com/play?user_id=65dce483fe555d15f28a73aa&idfa=&placement=landing_games_button_games_adjoe" 
+        allowfullscreen>
+    </iframe>
+
+    <!-- Home Screen Prompt -->
+    <div id="addToHomeScreenPrompt">
+        <p>📱 Add Fetch Play to your Home Screen for the best experience!</p>
+        <p>Tap <strong>Share</strong> <span style="font-size:16px;">⬆️</span> and select <strong>Add to Home Screen</strong>.</p>
+        <button id="dismissPrompt">Got it!</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if running in standalone mode
+            if (navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
+                return;
+            }
+
+            // Detect iOS Safari
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            if (isIOS && isSafari) {
+                setTimeout(() => {
+                    showAddToHomeScreenPrompt();
+                }, 2000);
+            }
+        });
+
+        function showAddToHomeScreenPrompt() {
+            if (localStorage.getItem('addToHomeDismissed')) return;
+
+            const promptDiv = document.getElementById('addToHomeScreenPrompt');
+            promptDiv.style.display = 'block';
+
+            document.getElementById('dismissPrompt').addEventListener('click', function () {
+                localStorage.setItem('addToHomeDismissed', 'true');
+                promptDiv.style.display = 'none';
+            });
+        }
+    </script>
+
 </body>
 </html>
